@@ -10,7 +10,6 @@ const Groups = lazy(()=>import("./pages/Groups.jsx"));
 const App = () => {
   return (
     <BrowserRouter>
-    <span>Header</span>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/chat/:chatId" element={<Chat />} />
