@@ -1,4 +1,4 @@
-import React, { lazy } from 'react'
+import React, { Suspense, lazy } from 'react'
 import { BrowserRouter, Routes, Route} from "react-router-dom";
 import ProtectRoute from './components/auth/ProtectRoute.jsx';
 
@@ -28,4 +28,4 @@ const App = () => {
 
 export default App
 
-// 1:17:18
+// 1:39:28
