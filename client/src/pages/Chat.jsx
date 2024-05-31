@@ -10,7 +10,7 @@ import MessageComponent from '../components/shared/MessageComponent';
 
 
 const user = {
-  _id: "al;djadfsj",
+  _id: "sdfsdfsdf",
   name: "Abhishek Nahar Singh",
 }
 
@@ -29,7 +29,7 @@ const Chat = () => {
         height="90%"
         sx={{ overflowX: "hidden", overflowY: "auto" }}>
         {sampleMessage.map(i=>(
-          <MessageComponent message={i} user={user} />
+          <MessageComponent key={i._id} message={i} user={user} />
         ))}
       </Stack>
 
