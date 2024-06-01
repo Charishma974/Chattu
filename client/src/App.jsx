@@ -9,6 +9,8 @@ const Chat = lazy(() => import("./pages/Chat.jsx"));
 const Groups = lazy(() => import("./pages/Groups.jsx"));
 const NotFound = lazy(() => import("./pages/NotFound.jsx"));
 
+const AdminLogin = lazy(()=>import("./pages/admin/AdminLogin.jsx"));
+
 let user = true;
 
 const App = () => {
@@ -22,6 +24,9 @@ const App = () => {
             <Route path="/groups" element={<Groups />} />
           </Route>
           <Route path="/login" element={<ProtectRoute user={!user} redirect="/"><Login /></ProtectRoute>} />
+
+          <Route path="/admin" element={<AdminLogin />} />
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
@@ -31,4 +36,4 @@ const App = () => {
 
 export default App
 
-// 4:52:52
+// 4:59:48
