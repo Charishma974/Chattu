@@ -10,6 +10,7 @@ const Groups = lazy(() => import("./pages/Groups.jsx"));
 const NotFound = lazy(() => import("./pages/NotFound.jsx"));
 
 const AdminLogin = lazy(()=>import("./pages/admin/AdminLogin.jsx"));
+const Dashboard = lazy(()=>import("./pages/admin/Dashboard.jsx"));
 
 let user = true;
 
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/login" element={<ProtectRoute user={!user} redirect="/"><Login /></ProtectRoute>} />
 
           <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<Dashboard />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

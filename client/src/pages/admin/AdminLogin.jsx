@@ -2,7 +2,9 @@ import { Button, Container, Paper, TextField, Typography } from "@mui/material";
 import React from 'react';
 import { bgGradient } from "../../constants/color";
 import { useInputValidation } from "6pp";
+import { Navigate } from "react-router-dom";
 
+const isAdmin = false;
 
 const AdminLogin = () => {
 
@@ -12,6 +14,9 @@ const AdminLogin = () => {
         e.preventDefault();
         console.log("Submit");
     }
+
+    if (isAdmin) return <Navigate to="/admin/dashboard" />
+
   return (
     <div style={{
         backgroundImage: bgGradient
