@@ -128,5 +128,37 @@ export const dashboardData = {
                 avatar: "https://www.w3schools.com/howto/img_avatar.png",
             },
         },
-    ]
+    ],
+    messages: [
+        {
+          attachments: [],
+          content: "L*uda ka Message hai",
+          _id: "sfnsdjkfsdnfkjsbnd",
+          sender: {
+            avatar: "https://www.w3schools.com/howto/img_avatar.png",
+            name: "Chaman ",
+          },
+          chat: "chatId",
+          groupChat: false,
+          createdAt: "2024-02-12T10:41:30.630Z",
+        },
+    
+        {
+          attachments: [
+            {
+              public_id: "asdsad 2",
+              url: "https://www.w3schools.com/howto/img_avatar.png",
+            },
+          ],
+          content: "",
+          _id: "sfnsdjkfsdnfkdddjsbnd",
+          sender: {
+            avatar: "https://www.w3schools.com/howto/img_avatar.png",
+            name: "Chaman  2",
+          },
+          chat: "chatId",
+          groupChat: true,
+          createdAt: "2024-02-12T10:41:30.630Z",
+        },
+      ],
 }
