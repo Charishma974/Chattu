@@ -41,7 +41,7 @@ const Dashboard = () => {
       xs: 'column',
       sm: 'row',
     }}
-    spacing="2rem"
+      spacing="2rem"
       justifyContent={"space-between"}
       alignItems="center"
       margin="2rem 0"
@@ -57,7 +57,18 @@ const Dashboard = () => {
       <Container component="main">
         {Appbar}
 
-        <Stack direction="row" spacing="2rem" flexWrap="wrap">
+        <Stack direction={{
+          xs: "column",
+          lg: "row",
+        }}
+          flexWrap="wrap"
+          justifyContent={"center"}
+          alignItems={{
+            xs: "center",
+            lg: "stretch",
+          }}
+          sx={{ gap: "2rem" }}
+        >
           <Paper elevation={3} sx={{
             padding: "2rem 3.5rem",
             borderRadius: "1rem",
@@ -66,7 +77,7 @@ const Dashboard = () => {
           }}>
             <Typography margin="2rem" variant="h4">Last Messages</Typography>
 
-            <LineChart value={[23,56,33,67,33,2]} />
+            <LineChart value={[23, 56, 33, 67, 33, 2]} />
           </Paper>
 
           <Paper elevation={3} sx={{
@@ -78,10 +89,9 @@ const Dashboard = () => {
             width: { xs: "100%", sm: "50%" },
             position: "relative",
             width: "100%",
-            maxWidth: "25rem",
-            height: "25rem"
+            maxWidth: "25rem"
           }}>
-            <DoughnutChart />
+            <DoughnutChart labels={["Single Chats", "Group Chats"]} value={[23, 66]} />
 
             <Stack
               position="absolute"
@@ -100,14 +110,14 @@ const Dashboard = () => {
             </Stack>
           </Paper>
         </Stack>
-        
+
         {Widgets}
       </Container>
     </AdminLayout>
   )
 }
 
-const Widget = ({title,value,Icon}) => (
+const Widget = ({ title, value, Icon }) => (
   <Paper elevation={3} sx={{
     padding: "2rem",
     margin: "2rem 0",
