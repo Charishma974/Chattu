@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import userRoute from "./routes/user.js";
 import chatRoute from "./routes/chat.js";
 import { createUser } from "./seeders/user.js";
+import { createGroupChats, createMessagesInAChat, createSingleChats } from "./seeders/chat.js";
 
 dotenv.config({path: "./.env"});
 
@@ -14,6 +15,8 @@ const mongoURI = process.env.MONGO_URI
 const port = process.env.PORT || 3000
 
 connectDB(mongoURI);
+
+// createMessagesInAChat("66714d37b009803582177997",50);
 
 const app = express();
 
@@ -33,5 +36,3 @@ app.use(errorMiddleware);
 app.listen(port,()=>{
     console.log(`Server is running on port ${port}`);
 })
-
-// 1:37:50
