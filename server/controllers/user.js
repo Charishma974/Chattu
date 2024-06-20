@@ -9,9 +9,13 @@ import { NEW_REQUEST, REFETCH_CHATS } from "../constants/events.js";
 import { getOtherMember } from "../lib/helper.js";
 
 // Create a new user and save it to the database and save token in cookie
-const newUser = async (req, res, next) => {
+const newUser = TryCatch(async (req, res, next) => {
 
     const { name, username, password, bio } = req.body;
+
+    const file = req.file;
+
+    if (!file) return next(new ErrorHandler("Please Upload Avatar"));
 
     const avatar = {
         public_id: "Sdfsd",
@@ -27,7 +31,7 @@ const newUser = async (req, res, next) => {
     })
 
     sendToken(res, user, 201, "User created");
-}
+})
 
 // Login user and save token in cookie
 const login = TryCatch(async (req, res, next) => {
@@ -184,8 +188,8 @@ const getMyFriends = TryCatch(async (req, res) => {
         groupChat: false,
     }).populate("members", "name avatar");
 
-    const friends = chats.map(({members})=>{
-        const otherUser = getOtherMember(members,req.user);
+    const friends = chats.map(({ members }) => {
+        const otherUser = getOtherMember(members, req.user);
 
         return {
             _id: otherUser._id,
@@ -194,7 +198,7 @@ const getMyFriends = TryCatch(async (req, res) => {
         }
     })
 
-    if (chatId){
+    if (chatId) {
 
         const chat = await Chat.findById(chatId);
 
@@ -207,7 +211,7 @@ const getMyFriends = TryCatch(async (req, res) => {
             friends: availableFriends
         })
 
-    }else{
+    } else {
         return res.status(200).json({
             success: true,
             friends,
