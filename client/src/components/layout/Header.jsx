@@ -3,6 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { orange } from "../../constants/color.js";
 import { AppBar, Backdrop, Box, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import { Menu as MenuIcon, Search as SearchIcon, Add as AddIcon, Group as GroupIcon, Logout as LogoutIcon, Notifications as NotificationsIcon } from "@mui/icons-material"
+import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
+import { userNotExists } from '../../redux/reducers/auth.js';
+import axios from 'axios';
+import { server } from '../../constants/config.js';
+import { setIsMobile, setIsSearch } from '../../redux/reducers/misc.js';
 
 const SearchDialog = lazy(()=>import("../specific/Search.jsx"))
 const NotificationDialog = lazy(()=>import("../specific/Notifications.jsx"));
@@ -11,19 +17,16 @@ const NewGroupDialog = lazy(()=>import("../specific/NewGroup.jsx"));
 const Header = () => {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const [isMobile, setIsMobile] = useState(false);
-  const [isSearch, setIsSearch] = useState(false);
+  const {isSearch} = useSelector((state)=>state.misc);
+
   const [isNewGroup, setIsNewGroup] = useState(false);
   const [isNotification, setIsNotification] = useState(false);
 
-  const handleMobile = () => {
-    setIsMobile(prev => !prev);
-  }
+  const handleMobile = () => dispatch(setIsMobile(true));
 
-  const openSearch = () => {
-    setIsSearch(prev => !prev);
-  }
+  const openSearch = () => dispatch(setIsSearch(true));
 
   const openNewGroup = () => {
     setIsNewGroup(prev => !prev);
@@ -37,8 +40,18 @@ const Header = () => {
     navigate("/groups");
   }
 
-  const logoutHandler = () => {
-    console.log("Logout");
+  const logoutHandler = async () => {
+
+    try{
+      const {data} = await axios.get(`${server}/api/v1/user/logout`,{
+        withCredentials: true
+      })
+      dispatch(userNotExists());
+      toast.success(data.message);
+    }catch(error){
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+
   }
 
   return (

@@ -1,15 +1,18 @@
 import { TryCatch } from "../middlewares/error.js";
 import { User } from "../models/user.js";
 import { Chat } from "../models/chat.js";
-import { cookieOptions, emitEvent, sendToken } from "../utils/features.js";
-import { compare } from "bcrypt";
+import { cookieOptions, emitEvent, sendToken, uploadFilesToCloudinary } from "../utils/features.js";
 import { ErrorHandler } from "../utils/utility.js";
 import { Request } from "../models/request.js";
 import { NEW_REQUEST, REFETCH_CHATS } from "../constants/events.js";
 import { getOtherMember } from "../lib/helper.js";
+import { compare } from "bcrypt";
 
 // Create a new user and save it to the database and save token in cookie
 const newUser = TryCatch(async (req, res, next) => {
+
+    console.log("Req.body: ", req.body);
+    console.log("File: ", req.file);
 
     const { name, username, password, bio } = req.body;
 
@@ -17,9 +20,11 @@ const newUser = TryCatch(async (req, res, next) => {
 
     if (!file) return next(new ErrorHandler("Please Upload Avatar"));
 
+    const result = await uploadFilesToCloudinary([file]);
+
     const avatar = {
-        public_id: "Sdfsd",
-        url: "asdfd"
+        public_id: result[0].public_id,
+        url: result[0].url,
     }
 
     const user = await User.create({
@@ -39,6 +44,8 @@ const login = TryCatch(async (req, res, next) => {
     const { username, password } = req.body;
 
     const user = await User.findOne({ username }).select("+password");
+
+    console.log(user);
 
     if (!user) return next(new ErrorHandler("Invalid Username or Password", 404));
 
@@ -86,7 +93,8 @@ const searchUser = TryCatch(async (req, res) => {
 
     // Modifying the response
     const users = allUsersExceptMeAndFriends.map(({ _id, name, avatar }) => ({
-        _id, name,
+        _id,
+        name,
         avatar: avatar.url,
     }))
 

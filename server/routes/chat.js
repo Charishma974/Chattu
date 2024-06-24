@@ -12,7 +12,7 @@ app.use(isAuthenticated);
 
 app.post("/new",newGroupValidator(),validateHandler,newGroupChat);
 
-app.post("/my",getMyChats);
+app.get("/my",getMyChats);
 
 app.get("/my/groups",getMyGroups);
 

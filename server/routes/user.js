@@ -1,8 +1,8 @@
 import express from "express";
-import { acceptFriendRequest, getMyFriends, getMyNotifications, getMyProfile, login, logout, newUser ,searchUser, sendFriendRequest} from "../controllers/user.js";
-import {multerUpload, singleAvatar} from "../middlewares/multer.js"
-import { isAuthenticated } from "../middlewares/auth.js";
+import { acceptFriendRequest, getMyFriends, getMyNotifications, getMyProfile, login, logout, newUser, searchUser, sendFriendRequest } from "../controllers/user.js";
 import { acceptRequestValidator, loginValidator, registerValidator, sendRequestValidator, validateHandler } from "../lib/validators.js";
+import { isAuthenticated } from "../middlewares/auth.js";
+import { singleAvatar } from "../middlewares/multer.js";
 
 const app = express.Router();
 

@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
-import { Avatar, Button, Container, IconButton, Paper, Stack, TextField, Typography } from "@mui/material";
-import { CameraAlt as CameraAltIcon } from "@mui/icons-material"
-import { VisuallyHiddenInput } from "../components/styles/StyledComponents.jsx";
 import { useFileHandler, useInputValidation } from "6pp";
-import { usernameValidator } from '../utils/validators.js';
-import { bgGradient } from '../constants/color.js';
-import { useDispatch } from 'react-redux';
-import toast from "react-hot-toast";
-import { userExists } from '../redux/reducers/auth.js';
+import { CameraAlt as CameraAltIcon } from "@mui/icons-material";
+import { Avatar, Button, Container, IconButton, Paper, Stack, TextField, Typography } from "@mui/material";
 import axios from 'axios';
+import React, { useState } from 'react';
+import toast from "react-hot-toast";
+import { useDispatch } from 'react-redux';
+import { VisuallyHiddenInput } from "../components/styles/StyledComponents.jsx";
+import { bgGradient } from '../constants/color.js';
 import { server } from '../constants/config.js';
+import { userExists } from '../redux/reducers/auth.js';
+import { usernameValidator } from '../utils/validators.js';
 
 const Login = () => {
 
@@ -37,10 +37,10 @@ const Login = () => {
         }
 
         try {
-            const {data} = await axios.post(`${server}/api/v1/user/login`,{
+            const { data } = await axios.post(`${server}/api/v1/user/login`, {
                 username: username.value,
                 password: password.value,
-            },config)
+            }, config)
             dispatch(userExists(true));
             toast.success(data.message);
         } catch (error) {
@@ -50,8 +50,34 @@ const Login = () => {
 
     }
 
-    const handleSignUp = (e) => {
+    const handleSignUp = async (e) => {
         e.preventDefault();
+
+        const formData = new FormData();
+        formData.append("avatar", avatar.file);
+        formData.append("name", name.value);
+        formData.append("bio", bio.value);
+        formData.append("username", username.value);
+        formData.append("password", password.value);
+
+        const config = {
+            withCredentials: true,
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        }
+
+        try {
+            const { data } = await axios.post(
+                `${server}/api/v1/user/new`,
+                formData, config
+            );
+
+            dispatch(userExists(true));
+            toast.success(data.message);
+        } catch (error) {
+            toast.error(error?.response?.data?.message || "Something went Wrong");
+        }
     }
 
     return (
