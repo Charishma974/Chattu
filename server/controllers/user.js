@@ -11,9 +11,6 @@ import { compare } from "bcrypt";
 // Create a new user and save it to the database and save token in cookie
 const newUser = TryCatch(async (req, res, next) => {
 
-    console.log("Req.body: ", req.body);
-    console.log("File: ", req.file);
-
     const { name, username, password, bio } = req.body;
 
     const file = req.file;
