@@ -1,11 +1,11 @@
-import { TryCatch } from "../middlewares/error.js";
-import { ErrorHandler } from "../utils/utility.js";
-import { Chat } from "../models/chat.js";
-import { deleteFilesFromCloudinary, emitEvent } from "../utils/features.js";
-import { ALERT, NEW_ATTACHMENT, NEW_MESSAGE_ALERT, REFETCH_CHATS } from "../constants/events.js";
+import { ALERT, NEW_MESSAGE, NEW_MESSAGE_ALERT, REFETCH_CHATS } from "../constants/events.js";
 import { getOtherMember } from "../lib/helper.js";
-import { User } from "../models/user.js";
+import { TryCatch } from "../middlewares/error.js";
+import { Chat } from "../models/chat.js";
 import { Message } from "../models/message.js";
+import { User } from "../models/user.js";
+import { deleteFilesFromCloudinary, emitEvent, uploadFilesToCloudinary } from "../utils/features.js";
+import { ErrorHandler } from "../utils/utility.js";
 
 const newGroupChat = TryCatch(async (req, res, next) => {
     const { name, members } = req.body;
@@ -179,11 +179,11 @@ const sendAttachments = TryCatch(async (req, res, next) => {
 
     const files = req.files || [];
 
-    if (files.length<1)
-        return next(new ErrorHandler("Please Upload Attachments",400));
+    if (files.length < 1)
+        return next(new ErrorHandler("Please Upload Attachments", 400));
 
     if (files.length > 5)
-        return next(new ErrorHandler("Files Can't be more than 5",400));
+        return next(new ErrorHandler("Files Can't be more than 5", 400));
 
     const [chat, me] = await Promise.all([Chat.findById(chatId), User.findById(req.user, "name")]);
 
@@ -194,7 +194,7 @@ const sendAttachments = TryCatch(async (req, res, next) => {
 
     // Upload files here
 
-    const attachments = [];
+    const attachments = await uploadFilesToCloudinary(files);
 
     const messageForDB = { content: "", attachments, sender: me._id, chat: chatId };
 
@@ -208,7 +208,7 @@ const sendAttachments = TryCatch(async (req, res, next) => {
 
     const message = await Message.create(messageForDB);
 
-    emitEvent(req, NEW_ATTACHMENT, chat.members, {
+    emitEvent(req, NEW_MESSAGE, chat.members, {
         message: messageForRealTime,
         chatId,
     });
@@ -337,4 +337,4 @@ const getMessages = TryCatch(async (req, res, next) => {
     })
 })
 
-export { newGroupChat, getMyChats, getMyGroups, addMembers, removeMember, leaveGroup, sendAttachments, getChatDetails, renameGroup, deleteChat, getMessages };
+export { addMembers, deleteChat, getChatDetails, getMessages, getMyChats, getMyGroups, leaveGroup, newGroupChat, removeMember, renameGroup, sendAttachments };
