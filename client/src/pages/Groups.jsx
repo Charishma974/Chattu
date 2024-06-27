@@ -4,9 +4,12 @@ import React, { Suspense, lazy, memo, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from "react-router-dom";
 import AvatarCard from "../components/shared/AvatarCard";
 import { Link } from "../components/styles/StyledComponents.jsx";
-import { matBlack,bgGradient } from "../constants/color";
+import { matBlack, bgGradient } from "../constants/color";
 import { sampleChats, sampleUsers } from "../constants/sampleData.js";
 import UserItem from "../components/shared/UserItem.jsx";
+import { useMyGroupsQuery } from "../redux/api/api.js";
+import { useErrors } from "../hooks/hook.jsx";
+import { LayoutLoader } from "../components/layout/Loaders.jsx";
 
 const ConfirmDeleteDialog = lazy(() => import("../components/dialogs/ConfirmDeleteDialog.jsx"))
 
@@ -17,8 +20,9 @@ const isAddMember = false;
 const Groups = () => {
 
   const chatId = useSearchParams()[0].get("group");
-
   const navigate = useNavigate();
+
+  const myGroups = useMyGroupsQuery("");
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -26,6 +30,13 @@ const Groups = () => {
 
   const [groupName, setGroupName] = useState("");
   const [groupNameUpdatedValue, setGroupNameUpdatedValue] = useState("");
+
+  const errors = [{
+    isError: myGroups.isError,
+    error: myGroups.error,
+  }];
+
+  useErrors(errors);
 
   const navigateBack = () => {
     navigate("/");
@@ -141,9 +152,9 @@ const Groups = () => {
     <Button size="large" variant="contained" startIcon={<AddIcon />} onClick={openAddMemberHandler}>Add Member</Button>
   </Stack>
 
-  return (
+  return myGroups.isLoading ? <LayoutLoader /> : (
     <Grid container height="100vh">
-      <Grid item sx={{ display: { xs: "none", sm: "block" },backgroundImage: bgGradient }} sm={4} bgcolor={"bisque"}><GroupsList myGroups={sampleChats} chatId={chatId} /></Grid>
+      <Grid item sx={{ display: { xs: "none", sm: "block" }, backgroundImage: bgGradient }} sm={4} bgcolor={"bisque"}><GroupsList myGroups={sampleChats} chatId={chatId} /></Grid>
       <Grid item xs={12} sm={8} sx={{
         display: "flex",
         flexDirection: "column",
