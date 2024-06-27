@@ -14,6 +14,7 @@ import { usernameValidator } from '../utils/validators.js';
 const Login = () => {
 
     const [isLogin, setIsLogin] = useState(true);
+    const [isLoading,setIsLoading] = useState(false)
 
     const toggleLogin = () => setIsLogin(prev => !prev);
 
@@ -29,6 +30,9 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
 
+        const toastId = toast.loading("Logging In...");
+
+        setIsLoading(true);
         const config = {
             withCredentials: true,
             headers: {
@@ -41,11 +45,17 @@ const Login = () => {
                 username: username.value,
                 password: password.value,
             }, config)
-            dispatch(userExists(true));
-            toast.success(data.message);
+            dispatch(userExists(data.user));
+            toast.success(data.message,{
+                id: toastId
+            });
         } catch (error) {
             console.log(error);
-            toast.error(error?.response?.data?.message || "Something went wrong");
+            toast.error(error?.response?.data?.message || "Something went wrong",{
+                id: toastId
+            });
+        }finally{
+            setIsLoading(false);
         }
 
     }
@@ -53,6 +63,8 @@ const Login = () => {
     const handleSignUp = async (e) => {
         e.preventDefault();
 
+        const toastId = toast.loading("Signing Up...");
+        setIsLoading(false);
         const formData = new FormData();
         formData.append("avatar", avatar.file);
         formData.append("name", name.value);
@@ -73,10 +85,16 @@ const Login = () => {
                 formData, config
             );
 
-            dispatch(userExists(true));
-            toast.success(data.message);
+            dispatch(userExists(data.user));
+            toast.success(data.message,{
+                id: toastId
+            });
         } catch (error) {
-            toast.error(error?.response?.data?.message || "Something went Wrong");
+            toast.error(error?.response?.data?.message || "Something went Wrong",{
+                id: toastId
+            });
+        }finally{
+            setIsLoading(false);
         }
     }
 
@@ -98,9 +116,9 @@ const Login = () => {
                         <form onSubmit={handleLogin} style={{ width: "100%", marginTop: "1rem" }}>
                             <TextField value={username.value} onChange={username.changeHandler} required fullWidth label="Username" margin="normal" variant="outlined" />
                             <TextField value={password.value} onChange={password.changeHandler} required fullWidth label="Password" type="password" margin="normal" variant="outlined" />
-                            <Button type="submit" variant="contained" color="primary" sx={{ marginTop: "1rem" }} fullWidth>Login</Button>
+                            <Button type="submit" variant="contained" color="primary" sx={{ marginTop: "1rem" }} disabled={isLoading} fullWidth>Login</Button>
                             <Typography textAlign="center" m={"1rem"}>OR</Typography>
-                            <Button variant="text" onClick={toggleLogin} fullWidth>Sign Up Instead</Button>
+                            <Button variant="text" onClick={toggleLogin} disabled={isLoading} fullWidth>Sign Up Instead</Button>
                         </form>
                     </> : <>
                         <Typography variant="h5">Sign Up</Typography>
@@ -131,9 +149,9 @@ const Login = () => {
                             <TextField value={username.value} onChange={username.changeHandler} required fullWidth label="Username" margin="normal" variant="outlined" />
                             {username.error && <Typography variant="caption" color="error">{username.error}</Typography>}
                             <TextField value={password.value} onChange={password.changeHandler} required fullWidth label="Password" type="password" margin="normal" variant="outlined" />
-                            <Button type="submit" variant="contained" color="primary" sx={{ marginTop: "1rem" }} fullWidth>Sign Up</Button>
+                            <Button type="submit" variant="contained" color="primary" sx={{ marginTop: "1rem" }} disabled={isLoading} fullWidth>Sign Up</Button>
                             <Typography textAlign="center" m={"1rem"}>OR</Typography>
-                            <Button variant="text" onClick={toggleLogin} fullWidth>Login Instead</Button>
+                            <Button variant="text" onClick={toggleLogin} disabled={isLoading} fullWidth>Login Instead</Button>
                         </form>
                     </>}
                 </Paper>

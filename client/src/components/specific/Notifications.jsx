@@ -2,7 +2,7 @@ import { Avatar, Button, Dialog, DialogTitle, ListItem, Skeleton, Stack, Typogra
 import React, { memo } from 'react'
 import { sampleNotifications } from '../../constants/sampleData'
 import { useAcceptFriendRequestMutation, useGetNotificationsQuery } from "../../redux/api/api"
-import { useErrors } from "../../hooks/hook";
+import { useAsyncMutation, useErrors } from "../../hooks/hook";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsNotification } from "../../redux/reducers/misc";
 import toast from "react-hot-toast";
@@ -15,25 +15,11 @@ const Notifications = () => {
 
   const { isLoading, data, error, isError } = useGetNotificationsQuery();
 
-  const [acceptRequest] = useAcceptFriendRequestMutation();
+  const [acceptRequest] = useAsyncMutation(useAcceptFriendRequestMutation);
 
   const friendRequestHandler = async ({ _id, accept }) => {
-    // Add friend request handler
-
     dispatch(setIsNotification(false));
-
-    try {
-      const res = await acceptRequest({ requestId : _id, accept });
-
-      if (res.data?.success) {
-        console.log("Use Socket Here");
-        toast.success(res.data.message);
-      } else toast.error(res.data?.error || "Something went wrong");
-    } catch (error) {
-      toast.error("Something went wrong");
-      console.log(error);
-    }
-
+    await acceptRequest("Accepting...",{requestId: _id,accept});
   }
 
   const closeHandler = () => dispatch(setIsNotification(false));

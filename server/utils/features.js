@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import { v4 as uuid } from "uuid";
-import {v2 as cloudinary} from "cloudinary";
+import { v2 as cloudinary } from "cloudinary";
 import { getBase64, getSockets } from "../lib/helper.js";
 
 const cookieOptions = {
@@ -27,6 +27,7 @@ const sendToken = (res, user, code, message) => {
 
     return res.status(code).cookie("chattu-token", token, cookieOptions).json({
         success: true,
+        user,
         message,
     })
 }
@@ -55,17 +56,17 @@ const uploadFilesToCloudinary = async (files = []) => {
         });
     });
 
-    try{
+    try {
         const results = await Promise.all(uploadPromises);
 
-        const formattedResults = results.map((result)=>({
+        const formattedResults = results.map((result) => ({
             public_id: result.public_id,
             url: result.secure_url,
         }));
         return formattedResults;
 
-    }catch(error){
-        throw new Error("Error uploading files to cloudinary",error);
+    } catch (error) {
+        throw new Error("Error uploading files to cloudinary", error);
     }
 
 }
