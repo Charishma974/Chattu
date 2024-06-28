@@ -5,6 +5,9 @@ import AvatarCard from "../../components/shared/AvatarCard.jsx";
 import Table from '../../components/shared/Table';
 import { dashboardData } from "../../constants/sampleData.js";
 import { transformImage } from "../../lib/features.js";
+import { useFetchData } from '6pp';
+import { server } from '../../constants/config.js';
+import { useErrors } from '../../hooks/hook.jsx';
 
 const columns = [
   {
@@ -27,6 +30,12 @@ const columns = [
     headerName: "Name",
     headerClassName: "table-header",
     width: 300,
+  },
+  {
+    field: "groupChat",
+    headerName: "Group",
+    headerClassName: "table-header",
+    width: 100,
   },
   {
     field: "totalMembers",
@@ -63,28 +72,39 @@ const columns = [
 
 const ChatManagement = () => {
 
+  const { loading, data, error } = useFetchData(`${server}/api/v1/admin/chats`, "dashboard-chats")
+
+  useErrors([
+    {
+      isErrors: error,
+      error: error
+    }
+  ])
+
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
 
-    setRows(
-      dashboardData.chats.map(i => ({
-        ...i,
-        id: i._id,
-        avatar: i.avatar.map(i => transformImage(i, 50)),
-        members: i.members.map(i=>transformImage(i.avatar,50)),
-        creator: {
-          name: i.creator.name,
-          avatar: transformImage(i.creator.avatar,50)
-        }
-      }))
-    )
+    if (data) {
+      setRows(
+        data.chats.map(i => ({
+          ...i,
+          id: i._id,
+          avatar: i.avatar.map(i => transformImage(i, 50)),
+          members: i.members.map(i => transformImage(i.avatar, 50)),
+          creator: {
+            name: i.creator.name,
+            avatar: transformImage(i.creator.avatar, 50)
+          }
+        }))
+      )
+    }
 
-  }, [])
+  }, [data])
 
   return (
     <AdminLayout>
-      <Table heading="All Chats" columns={columns} rows={rows} />
+      {loading ? <Skeleton height="100vh" /> : <Table heading="All Chats" columns={columns} rows={rows} />}
     </AdminLayout>
   )
 }

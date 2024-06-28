@@ -7,6 +7,9 @@ import moment from 'moment';
 import AvatarCard from '../../components/shared/AvatarCard.jsx';
 import Table from '../../components/shared/Table';
 import RenderAttachment from "../../components/shared/RenderAttachment.jsx";
+import { useFetchData } from '6pp';
+import { server } from '../../constants/config.js';
+import { useErrors } from '../../hooks/hook.jsx';
 
 const columns = [
   {
@@ -20,16 +23,16 @@ const columns = [
     headerName: "Attachments",
     headerClassName: "table-header",
     width: 200,
-    renderCell: (params)=> {
-      const {attachments} = params.row;
+    renderCell: (params) => {
+      const { attachments } = params.row;
 
-      return attachments?.length>0 ? attachments.map(i=>{
+      return attachments?.length > 0 ? attachments.map(i => {
         const url = i.url;
         const file = fileFormat(url);
 
         return <Box>
-          <a href={url} download target="_blank" style={{color: "black",}}>
-            {RenderAttachment(file,url)}
+          <a href={url} download target="_blank" style={{ color: "black", }}>
+            {RenderAttachment(file, url)}
           </a>
         </Box>
       }) : "No Attachments";
@@ -46,7 +49,7 @@ const columns = [
     headerName: "Sent By",
     headerClassName: "table-header",
     width: 200,
-    renderCell: (params)=>(
+    renderCell: (params) => (
       <Stack direction={"row"} spacing={"1rem"} alignItems={"center"}>
         <Avatar alt={params.row.sender.name} src={params.row.sender.avatar} />
         <span>{params.row.sender.name}</span>
@@ -75,27 +78,38 @@ const columns = [
 
 const MessageManagement = () => {
 
+  const { loading, data, error } = useFetchData(`${server}/api/v1/admin/messages`, "dashboard-messages")
+
+  useErrors([
+    {
+      isErrors: error,
+      error: error
+    }
+  ])
+
   const [rows, setRows] = useState([]);
 
-  useEffect(()=>{
+  useEffect(() => {
 
-    setRows(
-      dashboardData.messages.map(i=>({
-        ...i,
-        id: i._id,
-        sender: {
-          name: i.sender.name,
-          avatar: transformImage(i.sender.avatar,50)
-        },
-        createdAt: moment(i.createdAt).format("MMMM Do YYYY, h:mm:ss a")
-      }))
-    )
+    if (data) {
+      setRows(
+        data.messages.map(i => ({
+          ...i,
+          id: i._id,
+          sender: {
+            name: i.sender.name,
+            avatar: transformImage(i.sender.avatar, 50)
+          },
+          createdAt: moment(i.createdAt).format("MMMM Do YYYY, h:mm:ss a")
+        }))
+      )
+    }
 
-  },[])
+  }, [data])
 
   return (
     <AdminLayout>
-        <Table heading={"All Messages"} columns={columns} rows={rows} rowHeight={200} />
+      {loading ? <Skeleton height="100vh" /> : <Table heading={"All Messages"} columns={columns} rows={rows} rowHeight={200} />}
     </AdminLayout>
   )
 }

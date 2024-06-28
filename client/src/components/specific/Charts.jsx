@@ -1,6 +1,6 @@
 import { ArcElement, CategoryScale, Chart as ChartJS, Filler, Legend, LineElement, LinearScale, PointElement, Tooltip } from "chart.js";
 import React from "react";
-import { Line , Doughnut} from "react-chartjs-2";
+import { Line, Doughnut } from "react-chartjs-2";
 import { orange, orangeLight, purple, purpleLight } from "../../constants/color";
 import { getLast7Days } from "../../lib/features";
 
@@ -42,14 +42,14 @@ const lineChartOptions = {
     }
 };
 
-const LineChart = ({value=[]}) => {
+const LineChart = ({ value = [] }) => {
 
     const data = {
         labels,
         datasets: [
             {
                 data: value,
-                label: "Revenue",
+                label: "Messages",
                 fill: true,
                 backgroundColor: purpleLight,
                 borderColor: purple,
@@ -70,22 +70,22 @@ const doughnutChartOptions = {
     cutout: 120,
 }
 
-const DoughnutChart = ({value = [],labels = []}) => {
+const DoughnutChart = ({ value = [], labels = [] }) => {
 
     const data = {
         labels,
         datasets: [
             {
                 data: value,
-                backgroundColor: [purpleLight,orangeLight],
-                hoverBackgroundColor: [purple,orange],
-                borderColor: [purple,orange],
+                backgroundColor: [purpleLight, orangeLight],
+                hoverBackgroundColor: [purple, orange],
+                borderColor: [purple, orange],
                 offset: 40,
             }
         ]
     }
 
-    return <Doughnut style={{zIndex: 10}} data={data} options={doughnutChartOptions} />
+    return <Doughnut style={{ zIndex: 10 }} data={data} options={doughnutChartOptions} />
 }
 
 export { DoughnutChart, LineChart };
