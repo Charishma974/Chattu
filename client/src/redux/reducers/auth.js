@@ -6,7 +6,7 @@ const initialState = {
     user: null,
     isAdmin: false,
     loader: true,
-}
+};
 
 const authSlice = createSlice({
     name: "auth",

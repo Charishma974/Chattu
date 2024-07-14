@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material';
+import { Stack } from "@mui/material";
 import React from 'react';
 import ChatItem from '../shared/ChatItem';
 
@@ -27,7 +27,7 @@ const ChatList = ({
 
         const newMessageAlert = newMessagesAlert.find(({ chatId }) => chatId === _id)
 
-        const isOnline = members.some((member) => onlineUsers.includes(member))
+        const isOnline = members?.some((member) => onlineUsers.includes(member))
 
         return <ChatItem
           index={index}

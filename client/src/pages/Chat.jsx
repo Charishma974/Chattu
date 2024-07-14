@@ -16,7 +16,7 @@ import { useDispatch } from 'react-redux';
 import { setIsFileMenu } from '../redux/reducers/misc';
 import { removeNewMessagesAlert } from '../redux/reducers/chat';
 import { TypingLoader } from '../components/layout/Loaders';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const Chat = ({ chatId, user }) => {
 
@@ -89,7 +89,7 @@ const Chat = ({ chatId, user }) => {
   }
 
   useEffect(() => {
-    socket.emit(CHAT_JOINED,{userId: user._id,members});
+    socket.emit(CHAT_JOINED, { userId: user._id, members });
     dispatch(removeNewMessagesAlert(chatId));
 
     return () => {
@@ -97,20 +97,20 @@ const Chat = ({ chatId, user }) => {
       setMessage("");
       setOldMessages([]);
       setPage(1);
-      socket.emit(CHAT_LEAVED,{userId: user._id,members});
+      socket.emit(CHAT_LEAVED, { userId: user._id, members });
     }
   }, [chatId]);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (bottomRef.current)
-      bottomRef.current.scrollIntoView({behavior: "smooth"})
-  },[messages])
+      bottomRef.current.scrollIntoView({ behavior: "smooth" })
+  }, [messages])
 
-  useEffect(()=>{
+  useEffect(() => {
 
     if (!chatDetails.data?.chat) return navigate("/");
 
-  },[chatDetails.data])
+  }, [chatDetails.isError])
 
   const newMessagesHandler = useCallback((data) => {
     if (data.chatId !== chatId) return;
@@ -128,7 +128,7 @@ const Chat = ({ chatId, user }) => {
     setUserTyping(false);
   }, [chatId])
 
-  const alertListener = useCallback((data)=>{
+  const alertListener = useCallback((data) => {
     if (data.chatId !== chatId) return;
     const messageForAlert = {
       content: data.message,
@@ -140,8 +140,8 @@ const Chat = ({ chatId, user }) => {
       createdAt: new Date().toISOString(),
     };
 
-    setMessages((prev)=>[...prev,messageForAlert]);
-  },[chatId])
+    setMessages((prev) => [...prev, messageForAlert]);
+  }, [chatId])
 
   const eventHandler = {
     [ALERT]: alertListener,
@@ -158,10 +158,10 @@ const Chat = ({ chatId, user }) => {
 
   return chatDetails.isLoading ? (<Skeleton />) : (
     <>
-      <Stack key={chatId}
+      <Stack
         ref={containerRef}
-        boxSizing="border-box"
-        padding="1rem"
+        boxSizing={"border-box"}
+        padding={"1rem"}
         spacing="1rem"
         bgcolor={grayColor}
         height="90%"
@@ -177,7 +177,7 @@ const Chat = ({ chatId, user }) => {
       </Stack>
 
       <form style={{
-        height: "10%",
+        height: "10%"
       }} onSubmit={submitHandler}>
         <Stack
           direction="row"

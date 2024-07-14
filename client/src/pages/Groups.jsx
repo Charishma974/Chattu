@@ -1,4 +1,4 @@
-import { Add as AddIcon, Delete as DeleteIcon, Done as DoneIcon, Edit as EditIcon, KeyboardBackspace as KeyboardBackSpaceIcon, Menu as MenuIcon } from "@mui/icons-material";
+import { Add as AddIcon, Delete as DeleteIcon, Done as DoneIcon, Edit as EditIcon, KeyboardBackspace as KeyboardBackspaceIcon, Menu as MenuIcon } from "@mui/icons-material";
 import { Backdrop, Box, Button, CircularProgress, Drawer, Grid, IconButton, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import React, { Suspense, lazy, memo, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -156,7 +156,7 @@ const Groups = () => {
           bgcolor: "rgba(0,0,0,0.7)",
         }
       }} onClick={navigateBack}>
-        <KeyboardBackSpaceIcon />
+        <KeyboardBackspaceIcon />
       </IconButton>
     </Tooltip>
   </>
